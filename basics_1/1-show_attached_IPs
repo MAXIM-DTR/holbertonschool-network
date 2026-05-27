@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Affiche toutes les adresses IPv4 actives sur la machine
+
+# 'ip addr' affiche toutes les interfaces réseau et leurs adresses IP
+# 'grep' filtre les lignes qui contiennent 'inet ' (adresses IPv4)
+# On utilise 'inet ' avec un espace pour ne pas attraper 'inet6' (IPv6)
+# 'awk' extrait uniquement la partie qui nous intéresse dans chaque ligne
+# '{print $2}' affiche le 2ème mot de chaque ligne (ex: "10.0.2.15/24")
+# 'cut -d'/' -f1' supprime le masque de sous-réseau (/24, /8, etc.)
+# et garde uniquement l'adresse IP pure (ex: "10.0.2.15")
+ip addr | grep "inet " | awk '{print $2}' | cut -d'/' -f1
