@@ -1,1 +1,21 @@
-4
+#!/usr/bin/env bash
+# Pings an IP address passed as argument 5 times
+
+# '$1' représente le premier argument passé au script
+# Par exemple : ./5-is_the_host_on_the_network 8.8.8.8
+# Ici '$1' vaudrait '8.8.8.8'
+
+# '-z' vérifie si la variable est vide (aucun argument donné)
+# Si aucun argument n'est passé, on affiche le message d'utilisation et on quitte
+if [ -z "$1" ]; then
+    # Affiche comment utiliser le script correctement
+    echo "Usage: 5-is_the_host_on_the_network {IP_ADDRESS}"
+    # 'exit 1' quitte le script avec une erreur (1 = erreur, 0 = succès)
+    exit 1
+fi
+
+# La commande 'ping' utilise le protocole ICMP pour tester la connectivité
+# Elle envoie des petits paquets à l'adresse IP et attend une réponse
+# '-c 5' signifie qu'on envoie exactement 5 paquets puis on s'arrête
+# '$1' est l'adresse IP passée en argument par l'utilisateur
+ping -c 5 "$1"

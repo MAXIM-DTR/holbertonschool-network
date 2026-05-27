@@ -1,1 +1,11 @@
-2
+#!/usr/bin/env bash
+# Displays listening ports with PID and program name
+
+# La commande 'netstat' affiche les connexions réseau actives
+# Les options utilisées :
+# -t : affiche les connexions TCP (protocole fiable avec vérification)
+# -l : affiche uniquement les sockets en écoute (LISTEN) = ports ouverts qui attendent des connexions
+# -n : affiche les adresses en format numérique (ex: 80 au lieu de "http")
+# -p : affiche le PID et le nom du programme qui utilise chaque port
+# -u : affiche les connexions UDP (protocole rapide sans vérification)
+netstat -tlnpu
