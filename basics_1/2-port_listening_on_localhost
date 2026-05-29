@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Écoute sur le port 98 et affiche tout ce qui est reçu
+
+# 'nc' (netcat) : outil réseau qui permet de créer des connexions TCP/UDP.
+# Surnommé le "couteau suisse du réseau", il sert à envoyer/recevoir des données
+# sur n'importe quel port, tester des connexions, déboguer des services réseau, etc.
+
+# '-l' : mode écoute (listen). Au lieu d'initier une connexion vers un serveur distant,
+# nc attend qu'un client se connecte sur le port indiqué.
+
+# '98' : numéro du port sur lequel nc attend la connexion entrante.
+
+# Comment tester (deux terminaux) :
+# Terminal 1 → lancer ce script : sudo ./2-port_listening_on_localhost
+# Terminal 2 → se connecter    : telnet localhost 98
+#              puis taper du texte, il apparaîtra dans le terminal 1
+nc -l 98

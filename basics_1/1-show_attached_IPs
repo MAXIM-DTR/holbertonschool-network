@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 # Affiche toutes les adresses IPv4 actives sur la machine
 
-# 'ip addr' affiche toutes les interfaces réseau et leurs adresses IP
-# 'grep' filtre les lignes qui contiennent 'inet ' (adresses IPv4)
-# On utilise 'inet ' avec un espace pour ne pas attraper 'inet6' (IPv6)
-# 'awk' extrait uniquement la partie qui nous intéresse dans chaque ligne
-# '{print $2}' affiche le 2ème mot de chaque ligne (ex: "10.0.2.15/24")
-# 'cut -d'/' -f1' supprime le masque de sous-réseau (/24, /8, etc.)
-# et garde uniquement l'adresse IP pure (ex: "10.0.2.15")
-ip addr | grep "inet " | awk '{print $2}' | cut -d'/' -f1
+# Explication de chaque commande dans le pipeline :
+
+# 'ifconfig' : affiche toutes les interfaces réseau (eth0, lo, etc.)
+# avec leurs adresses IP, masques de sous-réseau, etc.
+
+# 'grep "inet "' : garde uniquement les lignes contenant "inet " (avec un espace).
+# Le space après "inet" est important : il exclut les lignes "inet6" (adresses IPv6)
+# car "inet6" est suivi d'un "6", pas d'un espace.
+
+# 'awk '{print $2}'' : extrait le 2ème mot de chaque ligne filtrée.
+# Exemple de ligne ifconfig : "        inet 10.0.2.15  netmask 255.255.255.0"
+# Le 2ème mot ($2) est directement l'adresse IP : "10.0.2.15"
+ifconfig | grep "inet " | awk '{print $2}'
