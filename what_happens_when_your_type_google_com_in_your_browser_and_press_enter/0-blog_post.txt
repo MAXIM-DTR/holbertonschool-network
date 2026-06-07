@@ -1,0 +1,46 @@
+Article — What happens when you type https://www.google.com and press Enter
+
+What happens when you type https://www.google.com in your browser and press Enter?
+This is probably one of the most common interview questions in software engineering, and honestly, the first time I heard it I thought "well… the page loads?" — turns out there's a lot more going on under the hood. Let me walk you through the full journey of a single URL request.
+
+1. DNS Request
+The first thing your browser needs to do is figure out where Google actually is on the internet. You typed a domain name, but computers communicate using IP addresses, not words.
+So your browser asks a DNS resolver (usually provided by your ISP or a public one like 8.8.8.8): "Hey, what's the IP address for www.google.com?"
+The resolver checks its cache first. If it doesn't know, it starts climbing the DNS hierarchy — asking root servers, then TLD servers (.com), then Google's own authoritative DNS servers — until it gets back something like 142.250.74.68. That IP gets cached so the next request is faster.
+
+2. TCP/IP
+Now your browser has an IP address. It needs to establish a connection with Google's server.
+This is done through TCP (Transmission Control Protocol) over IP. Before any data is sent, your browser and the server do what's called a three-way handshake:
+Your browser sends a SYN packet
+The server responds with SYN-ACK
+Your browser confirms with ACK
+Only after this handshake is the connection considered established. TCP also handles packet ordering and retransmission if something gets lost along the way.
+
+3. Firewall
+Along the route — both on your machine and on Google's infrastructure — there are firewalls checking the traffic.
+A firewall is basically a set of rules: allow this, block that. It inspects the packets and decides whether to let them through based on port numbers, IP addresses, protocols, etc. Since we're hitting port 443 (HTTPS), a properly configured firewall will allow it. If we were trying something suspicious, it might block us before we ever reach the server.
+
+4. HTTPS / SSL
+Because the URL starts with https://, the connection is encrypted. After the TCP handshake, your browser and Google's server do a TLS handshake:
+The server presents its SSL certificate (which proves it's actually Google and not someone pretending to be)
+Your browser verifies it against a trusted Certificate Authority
+They agree on an encryption method and exchange keys
+From this point on, all data is encrypted
+This is what protects your searches and passwords from being intercepted in transit.
+
+5. Load Balancer
+Google gets billions of requests per day. No single server can handle that. So when your request arrives at Google's infrastructure, it first hits a load balancer.
+The load balancer's job is to distribute incoming traffic across multiple servers. It picks one (based on availability, current load, geography, etc.) and forwards your request there. From your perspective, nothing changes — but on their side, thousands of servers are working in parallel to keep response times fast.
+
+6. Web Server
+Your request now reaches a web server (Google uses its own infrastructure, but tools like Nginx or Apache are common elsewhere).
+The web server handles the HTTP request. If the response is a static file (an image, a CSS file, a cached page), it can serve it directly. For dynamic content — like a Google search results page — it needs to pass the request along to the application layer.
+
+7. Application Server
+The application server is where the actual logic runs. For Google, this is where your search query gets processed — it figures out what results to show you, applies ranking algorithms, personalizes based on your location and history, etc.
+This layer generates the dynamic HTML that will eventually be sent back to your browser.
+
+8. Database
+To generate those results, the application server needs data. It queries databases — in Google's case, massively distributed ones — to retrieve indexed web pages, ads, user data, and whatever else is needed to build your response.
+The result comes back to the application server, which assembles the final HTML page and sends it back up the chain.
+
